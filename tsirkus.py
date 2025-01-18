@@ -19,13 +19,14 @@ class Tsirkus:
         self.jumps = np.array(list(zip(*jumps))) - 1
         self.path = np.arange(self.N)
         # check inputs
-        if not (np.amax(self.jumps) < self.N): 
-            raise ValueError(f"Jumps must be from/to positions less than {self.N}!")
-        if not (np.amin(self.jumps) >= 0):
-            raise ValueError(f"Jumps must be from/to positions greater than 0!")
-        if not (len(np.unique(self.jumps[0])) == len(self.jumps[0])):
-            raise ValueError(f"Jumps from position must be unique!")
-        self.path[self.jumps[0]] = self.jumps[1]
+        if self.jumps.size > 0:
+            if not (np.amax(self.jumps) < self.N): 
+                raise ValueError(f"Jumps must be from/to positions less than {self.N}!")
+            if not (np.amin(self.jumps) >= 0):
+                raise ValueError(f"Jumps must be from/to positions greater than 0!")
+            if  not (len(np.unique(self.jumps[0])) == len(self.jumps[0])):
+                raise ValueError(f"Jumps from position must be unique!")
+            self.path[self.jumps[0]] = self.jumps[1]
         # setup game matrix
         self.dice = 6 # one 6-sided dice (consider generalizing to m n-sided dice)
         self.dice_probs = np.ones(self.dice)/self.dice
@@ -38,14 +39,14 @@ class Tsirkus:
                     self.P[i, self.path[i+j+1]] += self.dice_probs[j]
                 else:
                     self.P[i, self.path[self.N-1 - (i+j+1 - (self.N-1))]] += self.dice_probs[j]
-        self.P[-1,-1] = 1 # stick at last position
+        self.P[-1,-1] = 1 # stick at last position (goal)
 
 
     def __repr__(self):
         return f"Tsirkus board game configuration with {len(self.path)} steps, {len(self.jumps)} jumps and shape {self.shape}"
         
 t = Tsirkus()
-pdb.set_trace()
+#pdb.set_trace()
         
 
 
