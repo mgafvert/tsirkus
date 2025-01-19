@@ -16,22 +16,24 @@ class Tsirkus:
         self.shape = shape
         self.N = shape[0]*shape[1]
         # setup game path
-        self.jumps = np.array(list(zip(*jumps))) - 1
+        self.jumps = np.array(list(zip(*jumps))) - 1 # -1 to translate from board positions 1..N to array indices 0..N-1 
         self.path = np.arange(self.N)
         # check inputs
-        if self.jumps.size > 0:
-            if not (np.amax(self.jumps) < self.N): 
+        if self.jumps.size > 0: # if any jumps 
+            if not (np.amax(self.jumps) < self.N - 1): 
                 raise ValueError(f"Jumps must be from/to positions less than {self.N}!")
             if not (np.amin(self.jumps) >= 0):
-                raise ValueError(f"Jumps must be from/to positions greater than 0!")
+                raise ValueError(f"Jumps must be from/to positions greater than 1!")
             if  not (len(np.unique(self.jumps[0])) == len(self.jumps[0])):
                 raise ValueError(f"Jumps from position must be unique!")
-            self.path[self.jumps[0]] = self.jumps[1]
+            if set(self.jumps[0]).intersection(set(self.jumps[1])):
+                raise ValueError(f"Jumps from and to positions must be distinct!")
+            self.path[self.jumps[0]] = self.jumps[1] # jumps from i to j encoded as path[i] = j
         # setup game matrix
         self.dice = 6 # one 6-sided dice (consider generalizing to m n-sided dice)
         self.dice_probs = np.ones(self.dice)/self.dice
         self.P = np.zeros((self.N, self.N))
-        for i in range(self.N-1): 
+        for i in range(self.N-1): # skip end position since not moving from there
             if self.path[i] != i: # skip jump positions (zero prob to stay there)
                 continue
             for j in range(self.dice):
@@ -39,7 +41,7 @@ class Tsirkus:
                     self.P[i, self.path[i+j+1]] += self.dice_probs[j]
                 else:
                     self.P[i, self.path[self.N-1 - (i+j+1 - (self.N-1))]] += self.dice_probs[j]
-        self.P[-1,-1] = 1 # stick at last position (goal)
+        self.P[-1,-1] = 1 # stick at end position
 
 
     def __repr__(self):
