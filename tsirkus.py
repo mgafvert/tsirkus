@@ -47,6 +47,15 @@ class Tsirkus:
                     self.P[i, self.path[self.N-1 - (i+j+1 - (self.N-1))]] += self.dice_probs[j]
         self.P[-1,-1] = 1 # stick at end position
 
+    def evolve(self, p0, p_final):
+            """
+            Generator to evolve game from initial state p0 until p[-1] >= p_final
+            """
+            p = p0
+            while p[-1] < p_final:
+                yield p
+                p = self.P.T@p
+
 
     def __repr__(self):
         return f"Tsirkus board game configuration with {len(self.path)} steps, {len(self.jumps)} jumps and shape {self.shape}"

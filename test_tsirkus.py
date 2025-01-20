@@ -20,7 +20,15 @@ class TestTsirkus(unittest.TestCase):
         np.testing.assert_array_equal(t.path,np.arange(t.shape[0]*t.shape[1]))
     def test_10x1(self):
         t = Tsirkus(jumps = [], shape=(10,1))
-        
+    def test_evolve(self):
+        t = Tsirkus()
+        p0 = np.zeros(t.N)
+        p0[0] = 1
+        p_final = 0.5
+        for i, p in enumerate(t.evolve(p0, p_final)):
+            print(i, p[-1])
+            np.testing.assert_allclose(np.sum(p),1.)
+            assert p[-1] < p_final 
 
 if __name__ == '__main__':
     unittest.main()
