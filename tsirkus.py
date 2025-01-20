@@ -49,7 +49,8 @@ class Tsirkus:
 
     def evolve_final(self, p0 = None, p_final = 1.):
             """
-            Generator to evolve game from initial state p0 until p[-1] >= p_final
+            Generator to evolve game from initial state p0 until p[-1] >= p_final (probability at game path end position)
+            yields position probability vector p at each step 
             p0 is initial state (defaults to 1.0 at start position)
             p_final is end position probability condition (defaults to 1.0 and infinite game if back jumps are present)
             """
@@ -60,7 +61,7 @@ class Tsirkus:
             while p[-1] < p_final:
                 p = self.P.T@p
                 yield p
-
+            
     def evolve_turns(self, p0 = None, N=1):
             if p0 is None:
                 p0 = np.eye(self.N,1)
@@ -74,5 +75,14 @@ t = Tsirkus()
         
 
 
-
+if __name__ == '__main__':
+    t = Tsirkus()
+    p0 = np.eye(t.N,1)
+    p_final = 0.5
+    for i, p in enumerate(t.evolve_final(p0, p_final)):
+        pass
+    print(i,p[-1])
+ 
+    P = np.squeeze(np.array([p for p in t.evolve_final(p0, p_final)]))
+    p_end = P[:,-1]
 

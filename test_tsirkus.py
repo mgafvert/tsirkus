@@ -31,8 +31,8 @@ class TestTsirkus(unittest.TestCase):
         p_final = 0.5
         for i, p in enumerate(t.evolve_final(p0, p_final)):
             np.testing.assert_allclose(np.sum(p),1.)
-            print(i,p[-1])
         assert p[-1] >= p_final 
+        
 
     def test_evolve_final_default(self):
         t = Tsirkus()
@@ -56,5 +56,5 @@ class TestTsirkus(unittest.TestCase):
         np.testing.assert_allclose(t.evolve_turns(p0,i),pi)
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity = 2)
 
