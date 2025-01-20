@@ -7,6 +7,7 @@ from matplotlib.colors import LogNorm
 
 
 #t = ts.Tsirkus(jumps=[])
+# t = ts.Tsirkus(jumps=[(100,10)])
 t = ts.Tsirkus()
 p0 = np.eye(t.N,1) # init position probability vector
 # calculate up to 0.999 probability to win
@@ -18,10 +19,10 @@ x = np.arange(len(p_end))
 
 # console output
 i = np.where(p_end > 0.)[0][0] # first [0] to pick the array from the tuple, second [0] to pick the first element
-print(f'Minimum turns to win: {i} (probability {p_end[i]:.3e})')
+print(f'Minimum turns to terminate: {i} (probability {p_end[i]:.3e})')
 
 i = np.argmax(p_end_diff)
-print(f'Nunber of turns with highest probability to win: {i} (probability {p_end_diff[i]:.3e})')
+print(f'Nunber of turns with highest probability to terminate: {i} (probability {p_end_diff[i]:.3e})')
 
 percentiles = [0.001, 0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99, 0.999]
 print(f"{'Percentile':>12}{'Turn (-)':>12}{'Prob (-)':>12}{'Turn (+)':>12}{'Prob (+)':>12}")
