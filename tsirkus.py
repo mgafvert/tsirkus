@@ -13,11 +13,15 @@ class Tsirkus:
     def __init__(self, 
                  jumps = [(3,19), (9,11), (14,30), (15,7), (17,36), (20,42), (26,35), (34,97), (38,57), (50,32), (59,79), (64,78), (68,48), (70,72), (77,98), (92,74), (100,82), (103,96), (107,23), (108,114), (112,91), (116,105), (119,101)], 
                  shape = (12,10)):
+        """
+        jump: list of tuples of jump positions (from, to) where from and to are board positions 1..N
+        shape: tuple of board shape (rows, columns) where game path length N = rows*columns
+        """
         self.shape = shape
         self.N = shape[0]*shape[1]
         # setup game path
         self.jumps = np.array(list(zip(*jumps))) - 1 # -1 to translate from board positions 1..N to array indices 0..N-1 
-        self.path = np.arange(self.N)
+        self.path = np.arange(self.N) # enumerate board positions
         # check inputs
         if self.jumps.size > 0: # if any jumps 
             if not (np.amax(self.jumps) < self.N - 1): 
