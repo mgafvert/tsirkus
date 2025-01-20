@@ -28,7 +28,8 @@ i = np.argmax(p_end_diff)
 print(f'Nunber of turns with highest probability to win: {i} (probability {p_end_diff[i]:.3e})')
 
 percentiles = [0.001, 0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99, 0.999]
+print(f"{'Percentile':>12}{'Turn (-)':>12}{'Prob (-)':>12}{'Turn (+)':>12}{'Prob (+)':>12}")
 for p in percentiles:
     i = np.where(p_end <= p)[0][-1]
-    print(f'Percentile {p:.2f} at turn {i} (probability {p_end[i]:.3e})')
+    print(f'{p:>12.3f}{i:>12d}{p_end[i]:>12.3e}{i+1:>12d}{p_end[i+1]:>12.3e}')
 
