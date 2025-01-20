@@ -47,15 +47,24 @@ class Tsirkus:
                     self.P[i, self.path[self.N-1 - (i+j+1 - (self.N-1))]] += self.dice_probs[j]
         self.P[-1,-1] = 1 # stick at end position
 
-    def evolve(self, p0, p_final):
+    def evolve_final(self, p0 = None, p_final = 1.):
             """
             Generator to evolve game from initial state p0 until p[-1] >= p_final
+            p0 is initial state (defaults to 1.0 at start position)
+            p_final is end position probability condition (defaults to 1.0 and infinite game if back jumps are present)
             """
+            if p0 is None:
+                p0 = np.eye(self.N,1)
             p = p0
+            yield p
             while p[-1] < p_final:
-                yield p
                 p = self.P.T@p
+                yield p
 
+    def evolve_turns(self, p0 = None, N=1):
+            if p0 is None:
+                p0 = np.eye(self.N,1)
+            return matrix_power(self.P.T,N)@p0
 
     def __repr__(self):
         return f"Tsirkus board game configuration with {len(self.path)} steps, {len(self.jumps)} jumps and shape {self.shape}"
